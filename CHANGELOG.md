@@ -1,5 +1,12 @@
 # Changelog
 
+## Cart remediation — 2026-10-25
+
+- Add confirmed Shopify line updates and server-rendered cart/header refresh.
+- Handle quantity rejection and uncertain/network errors without optimistic success.
+- Preserve native forms; add six regression tests and lab runtime evidence.
+- Native submission root cause, standalone access and Arabic runtime remain open.
+
 ## 0.1.0-development — 2026-10-25
 
 - Replace preview-only Skeleton dialect with its pinned section-based parent.

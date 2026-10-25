@@ -1,4 +1,70 @@
-# Test report — first review slice, 2026-10-25
+# Current test report — cart remediation, 2026-10-25
+
+## Scope and revisions
+
+Same Draft PR #1 and branch `codex/electronics-foundation`. Started from verified 724ed35a40f7145b2cbd4639f782c2af7220a966; no newer merchant/editor changes were present. Preserved product.json reorder from Shopify commit 0180137. Only development store indexes-electronics-theme-lab.myshopify.com and unpublished theme 189902979293 used. No theme publication, main update, purchases or changes to other stores.
+
+- 5c113400cf262bc4ce3b34ef38eac00ed189b55e: explicit native submit values; did NOT resolve the editor reproduction.
+- 90b80fd70a265a9ddd461d0ec2e681fd238cae17: progressive cart controller, translated status/error/reload messages, six regression tests.
+
+## Diagnosis: established facts versus unresolved cause
+
+Reproduced native Update with `updates[]=2`; UI input became 2 but server-rendered total and badge stayed at quantity 1. Inspected form: POST to localized cart route, correct input name; submit buttons had empty values. Adding values did not fix it, disproving that as a sufficient explanation. No raw HTTP trace was exposed by the available browser API, and standalone authentication remains blocked. **The underlying cause of the original native submission failure is not confirmed.** Do not label it a Shopify editor defect or claim the native/no-JS path is fixed.
+
+The remediation intercepts update/removal through a progressive module, submits explicit line keys and quantities to Shopify's locale-aware `cart/change.js`, checks HTTP success and the returned quantity, then loads authoritative cart and header sections. No client-calculated money or optimistic badge is used. Controls lock during requests; partial mutations/network errors are not retried automatically. A section-rendering failure leaves checkout disabled and exposes Reload cart. Native forms and checkout submission remain in markup; no checkout was executed.
+
+Source reviewed 2026-10-25: https://shopify.dev/docs/api/ajax/reference/cart and https://shopify.dev/docs/storefronts/themes/architecture/templates/cart . This implementation is original; no commercial theme code copied.
+
+## Shopify runtime results on 90b80fd
+
+Chrome cloud browser, Shopify editor mobile preview (375px), existing generated Complete Snowboard / Dawn fixture, unit price $699.95 USD.
+
+| Case | Status | Observed evidence |
+| --- | --- | --- |
+| Increase 1 → 2 | PASS in editor | Input 2, badge 2, line and total $1,399.90; Cart updated appeared only after server confirmation and section refresh. |
+| Reload persistence | PASS in editor | Full editor reload preserved quantity 2, badge 2 and $1,399.90. |
+| Decrease 2 → 1 | PASS in editor | Badge 1, line and total $699.95. |
+| Remove last line | PASS in editor | Remove link produced empty-cart message and removed badge. |
+| Add selected variant | PASS in editor | Product URL selected Dawn; Add to cart produced Dawn, quantity 1 and $699.95. |
+| Excess quantity 999999 | PASS error handling, not exact quantity acceptance | Shopify state became 10, badge 10, line/total $6,999.50. UI displayed the translated confirmation-error message, not success. Actual HTTP status was not captured; cannot distinguish a clamp response from another error solely by UI. |
+| Quantity 0 via Update | PASS in editor | Empty-cart message and no badge. Test cart left empty. |
+| Mobile overflow | PASS inspected empty-cart viewport only | document clientWidth=375, scrollWidth=375; lang=en, dir=ltr. Screenshots record populated and error states, not exhaustive device testing. |
+| Network failure | LOCAL ONLY | Rejected fetch/invalid JSON tested; actual browser disconnection/timeout not injected. |
+| Product different price | PRIOR PASS | Gift Card $10 → $25 tested in previous slice; not repeated after cart-only change. |
+| Variant image / mixed availability | NOT TESTED | Existing fixture does not establish changing images or available/unavailable choices within one product; dedicated fixture still needed. |
+| Block ordering | PRIOR PASS, PRESERVED | Existing saved Description-before-Price JSON unchanged; no new editor save this turn. |
+| Arabic RTL | BLOCKED | Lab has English only; no Arabic runtime claim. |
+| Standalone preview / native fallback | BLOCKED | Browser remains on storefront password page with prior incorrect-password error. No protection disabled or credentials collected. |
+
+Evidence: [quantity 2 after reload](evidence/cart-quantity-two.jpg), [empty cart](evidence/cart-empty.jpg), [excess-quantity response](evidence/cart-inventory-error.jpg).
+
+Authenticated product preview (verified in this session; requires Shopify admin):
+https://admin.shopify.com/store/indexes-electronics-theme-lab/themes/189902979293/editor?previewPath=%2Fproducts%2Fthe-complete-snowboard%3Fvariant%3D68278720561373&previewMode=mobile
+
+## Local and CI evidence
+
+- `npm test`: 18/18 pass (12 existing + 6 transport regression tests using injected responses). Covers locale URL, line key, 1→2, decrease/removal, rejected/clamped inventory, network/JSON failure, invalid quantities, stopping sequential updates after failure. Mock responses are NOT Shopify runtime results.
+- `npm run check`: 45 Liquid/theme files, zero offenses; no suppression added.
+- `git diff --check`: pass.
+- 90b80fd [PR quality run](https://github.com/helalalfqih-sketch/indexes-electronics-theme/actions/runs/40221472303) and [push quality run](https://github.com/helalalfqih-sketch/indexes-electronics-theme/actions/runs/40221468887): success.
+- [CLA run](https://github.com/helalalfqih-sketch/indexes-electronics-theme/actions/runs/40221470540), job 121253769045: failed; log verified `Input required and not supplied: cla-token`.
+- Main's CLA workflow uses `pull_request_target` and Shopify/shopify-cla-action. Draft already proposes deleting this upstream-specific workflow while retaining LICENSE.md and quality CI. Applying removal requires a future authorized main merge; main was not edited and no token invented.
+- Final evidence-only commit CI must be checked separately; final PR delivery records its result.
+
+## Arabic preparation and approvals
+
+Settings > Languages lists English only. Opened Add language; Arabic is offered, and dialog says Shopify Translate & Adapt will be installed. Canceled without saving. Adding/publishing a language is store-level, not restricted to this draft. Current official guide distinguishes Add and Publish:
+https://help.shopify.com/en/manual/international/languages/manage-languages (reviewed 2026-10-25).
+
+Next specific approval: add Arabic as an **unpublished** language in this lab only (and the displayed Translate & Adapt installation if required), inspect the official unpublished-language preview, and only if necessary seek separate approval to publish Arabic. No default-language switch. No current claim that publication is technically required.
+
+## Remaining acceptance gaps
+
+Standalone password handoff; native/no-JS root cause; mixed variant price/image/availability fixture; Arabic/RTL runtime; actual network failure; multi-line/discount/property runtime; checkout; Safari/Firefox and physical devices; accessibility and performance. Theme remains a development foundation, not sale/submission ready. Competitor research and new features deferred.
+
+---
+
+# Historical first-slice results — 2026-10-25
 
 ## Local evidence
 
