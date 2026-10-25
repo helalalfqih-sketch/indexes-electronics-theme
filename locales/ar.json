@@ -1,0 +1,69 @@
+{
+  "404": {
+    "title": "404",
+    "not_found": "الصفحة غير موجودة",
+    "back_to_shopping": "العودة للتسوق"
+  },
+  "blog": {
+    "article_comments": "التعليقات",
+    "article_metadata_html": "{{ date }} بواسطة {{ author }}",
+    "comment_form_body": "التعليق",
+    "comment_form_email": "البريد الإلكتروني",
+    "comment_form_name": "الاسم",
+    "comment_form_submit": "إرسال",
+    "comment_form_title": "أضف تعليقًا"
+  },
+  "cart": {
+    "checkout": "إتمام الشراء",
+    "title": "السلة",
+    "update": "تحديث",
+    "remove": "إزالة"
+  },
+  "customers": {
+    "login": {
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "submit": "تسجيل الدخول",
+      "title": "تسجيل الدخول"
+    }
+  },
+  "collections": {
+    "title": "الأقسام"
+  },
+  "gift_card": {
+    "add_to_apple_wallet": "إضافة إلى Apple Wallet",
+    "card": "بطاقة هدية",
+    "expired": "انتهت صلاحية بطاقة الهدية",
+    "expires_on": "تنتهي في {{ expires_on }}",
+    "use_at_checkout": "استخدمها عند إتمام الشراء"
+  },
+  "password": {
+    "title": "هذا المتجر خاص",
+    "password": "كلمة المرور",
+    "enter": "دخول"
+  },
+  "search": {
+    "title": "البحث",
+    "placeholder": "ابحث عن منتجات أو مقالات أو صفحات",
+    "submit": "بحث",
+    "no_results_html": "لا توجد نتائج لـ {{ terms }}",
+    "results_for_html": "{{ count }} نتيجة لـ {{ terms }}"
+  },
+  "electronics": {
+    "specifications": "المواصفات",
+    "compatibility": "الأجهزة المتوافقة",
+    "box_contents": "محتويات العبوة",
+    "variant": "الخيار",
+    "select_variant": "تطبيق الاختيار",
+    "quantity": "الكمية",
+    "add_to_cart": "أضف إلى السلة",
+    "sold_out": "غير متوفر",
+    "skip_content": "انتقل إلى المحتوى",
+    "from_price": "ابتداءً من",
+    "no_products": "لا توجد منتجات للعرض بعد.",
+    "view_collection": "عرض القسم",
+    "browse_products": "تصفح المنتجات",
+    "cart_empty": "سلتك فارغة.",
+    "total": "الإجمالي"
+  }
+}

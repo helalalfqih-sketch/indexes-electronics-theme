@@ -1,0 +1,34 @@
+<h1>{{ 'cart.title' | t }}</h1>
+{% if cart.empty? %}
+  <p>{{ 'electronics.cart_empty' | t }}</p>
+  <a href="{{ routes.all_products_collection_url }}">{{ 'electronics.browse_products' | t }}</a>
+{% else %}
+  <form action="{{ routes.cart_url }}" method="post" class="cart-form">
+    {% for item in cart.items %}
+      <div class="cart-line">
+        {% if item.image %}{% render 'image', image: item.image, url: item.url, width: 180 %}{% endif %}
+        <div>
+          <a href="{{ item.url }}">{{ item.product.title | escape }}</a>
+          {% unless item.product.has_only_default_variant %}<p>{{ item.variant.title | escape }}</p>{% endunless %}
+          <p><bdi>{{ item.final_line_price | money_with_currency }}</bdi></p>
+          <label for="CartQuantity-{{ section.id }}-{{ forloop.index }}">{{ 'electronics.quantity' | t }}</label>
+          <input id="CartQuantity-{{ section.id }}-{{ forloop.index }}" type="number" name="updates[]" min="0" value="{{ item.quantity }}">
+          <a href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }} <span class="visually-hidden">{{ item.product.title | escape }}</span></a>
+        </div>
+      </div>
+    {% endfor %}
+    <p>{{ 'electronics.total' | t }}: <bdi>{{ cart.total_price | money_with_currency }}</bdi></p>
+    <button type="submit" name="update">{{ 'cart.update' | t }}</button>
+    <button type="submit" name="checkout">{{ 'cart.checkout' | t }}</button>
+    {% if additional_checkout_buttons %}{{ content_for_additional_checkout_buttons }}{% endif %}
+  </form>
+{% endif %}
+{% stylesheet %}
+.cart-form { padding-block:2rem; display:grid; gap:1rem; }
+.cart-line { display:grid; grid-template-columns:minmax(0,140px) minmax(0,1fr); gap:1rem; padding-block:1rem; border-block-end:1px solid currentColor; }
+.cart-line input { max-width:6rem; min-height:44px; }
+.cart-form button { min-height:44px; font:inherit; cursor:pointer; }
+{% endstylesheet %}
+{% schema %}
+{"name":"t:general.cart","settings":[]}
+{% endschema %}

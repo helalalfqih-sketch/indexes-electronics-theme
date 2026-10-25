@@ -1,0 +1,42 @@
+{% doc %}
+  Render only merchant-supplied product facts. Empty and incomplete rows are hidden.
+  @param {product} product - Product whose facts should be displayed.
+{% enddoc %}
+{%- capture spec_rows -%}
+  {%- for spec in product.metafields.electronics.specifications.value -%}
+    {%- if spec.label.value != blank and spec.value.value != blank -%}
+      <div class="product-facts__row">
+        <dt><bdi>{{ spec.label.value | escape }}</bdi></dt>
+        <dd><bdi>{{ spec.value.value | escape }}</bdi>{% if spec.unit.value != blank %} <bdi>{{ spec.unit.value | escape }}</bdi>{% endif %}</dd>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- if spec_rows != blank -%}
+  <div class="product-facts">
+    <h2>{{ 'electronics.specifications' | t }}</h2>
+    <dl>{{ spec_rows }}</dl>
+  </div>
+{%- endif -%}
+{%- capture compatibility_rows -%}
+  {%- for device in product.metafields.electronics.compatible_devices.value -%}
+    {%- if device != blank -%}<li><bdi>{{ device | escape }}</bdi></li>{%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- if compatibility_rows != blank -%}
+  <div class="product-facts">
+    <h2>{{ 'electronics.compatibility' | t }}</h2>
+    <ul>{{ compatibility_rows }}</ul>
+  </div>
+{%- endif -%}
+{%- capture box_rows -%}
+  {%- for item in product.metafields.electronics.box_contents.value -%}
+    {%- if item != blank -%}<li><bdi>{{ item | escape }}</bdi></li>{%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- if box_rows != blank -%}
+  <div class="product-facts">
+    <h2>{{ 'electronics.box_contents' | t }}</h2>
+    <ul>{{ box_rows }}</ul>
+  </div>
+{%- endif -%}

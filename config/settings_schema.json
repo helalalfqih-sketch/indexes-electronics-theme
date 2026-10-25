@@ -1,11 +1,11 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Skeleton",
+    "theme_name": "Electronics Lab",
     "theme_version": "0.1.0",
-    "theme_author": "Shopify",
-    "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
-    "theme_support_url": "https://support.shopify.com/"
+    "theme_author": "helalalfqih-sketch",
+    "theme_documentation_url": "https://github.com/helalalfqih-sketch/indexes-electronics-theme/blob/codex/electronics-foundation/docs/MERCHANT_GUIDE.md",
+    "theme_support_url": "https://github.com/helalalfqih-sketch/indexes-electronics-theme/issues"
   },
   {
     "name": "t:general.typography",
