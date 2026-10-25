@@ -18,8 +18,8 @@
       </div>
     {% endfor %}
     <p>{{ 'electronics.total' | t }}: <bdi>{{ cart.total_price | money_with_currency }}</bdi></p>
-    <button type="submit" name="update">{{ 'cart.update' | t }}</button>
-    <button type="submit" name="checkout">{{ 'cart.checkout' | t }}</button>
+    <button type="submit" name="update" value="update">{{ 'cart.update' | t }}</button>
+    <button type="submit" name="checkout" value="checkout">{{ 'cart.checkout' | t }}</button>
     {% if additional_checkout_buttons %}{{ content_for_additional_checkout_buttons }}{% endif %}
   </form>
 {% endif %}
