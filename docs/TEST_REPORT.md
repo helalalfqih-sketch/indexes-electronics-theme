@@ -1,4 +1,33 @@
-# Current test report — cart remediation, 2026-10-25
+# Latest verification — unpublished Arabic and cart recovery, 2026-10-25
+
+Started from 65cd36c8eda4bfc3319ec992d122d81c1c8f509f; fetched remote again before writing: unchanged. Same Draft PR #1, branch codex/electronics-foundation. No theme source/template or merchant settings files changed in this slice. Product block order preserved. Final delivery SHA and CI links are recorded in PR #1 (a commit cannot contain its own SHA).
+
+## Shopify evidence
+
+- PASS: Added Arabic to the lab only, associated with its existing domain, left **unpublished**. English remains published and default. Shopify installed its free Translate & Adapt during this flow; no subscription or language publication performed.
+- PASS: Official language Preview and official draft-theme Preview established an authenticated standalone session. Verified our draft identity in Shopify preview bar, then /ar rendered lang=ar, dir=rtl. Earlier password blockage below is historical, not the current session result. No credentials read/stored and password protection remains enabled.
+- PASS, limited mobile view: own draft product in editor at 360px has clientWidth=scrollWidth=360, Arabic selector/quantity/purchase labels, RTL layout and USD prices. English merchant product content remains untranslated; long native select labels truncate at this width. This is not a complete Arabic accessibility/device audit.
+- PASS: Selling Plans Ski Wax selected variant 68278720364765 at $24.95, then 68278720397533 at $49.95 via native Apply selection. Adding Special variant produced the matching cart title and $49.95.
+- PASS: Arabic standalone cart update 1→2 gave line/total $99.90, badge 2 and Arabic confirmed status; 2→1 returned $49.95.
+- INCOMPLETE: Different variant images. Both tested wax variants rendered the loaded golden snowboard_wax.jpg despite other gallery images. No evidence yet establishing assigned variant-image mappings; do not call image switching passed. Mixed available/unavailable variants also remain unverified.
+- NOT TESTED: Actual Shopify browser network disconnection/recovery, Safari, Firefox, screen reader, exhaustive menus/forms and post-change native/no-JS fallback. Browser control exposes no offline/route interception; no artificial storefront success claimed.
+- Original native cart submission failure cause remains **unresolved**. Progressive AJAX remediation and its positive tests do not prove the root cause.
+
+[Arabic mobile product evidence](evidence/arabic-product-mobile.jpg).
+Authenticated preview verified (requires lab admin access):
+https://admin.shopify.com/store/indexes-electronics-theme-lab/themes/189902979293/editor?previewPath=%2Far%2Fproducts%2Fselling-plans-ski-wax%3Fvariant%3D68278720397533&previewMode=mobile
+
+## Local verification
+
+PASS: npm test, 21/21. Three new integration cases execute the actual cart.js controller against a real local HTTP server and jsdom DOM: socket loss locks stale checkout and exposes reload; recovery after reloading confirms server totals without duplicate mutation; accepted mutation with lost response reconciles server totals while displaying error; missing header section prevents partial render. These are local transport/DOM tests, not Shopify browser offline tests. Fixture markup is simplified and does not validate Liquid rendering.
+
+PASS: npm run check, 45 files, zero offenses. Dev-only jsdom pinned; excluded from theme upload. No storefront source changes. CLA failure remains inherited from main pull_request_target workflow needing cla-token; its removal is already proposed in draft, main unchanged. No token invented or quality checks disabled.
+
+No theme/language publication, merge, purchase or spending. Not ready for sale/submission on these results alone.
+
+---
+
+# Historical cart remediation report — 2026-10-25
 
 ## Scope and revisions
 

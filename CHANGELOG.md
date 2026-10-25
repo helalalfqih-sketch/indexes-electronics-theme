@@ -14,3 +14,5 @@
 - Add Arabic storefront strings and RTL document direction; responsive product layout.
 - Add configurable homepage collection, improve native cart and header navigation.
 - Add development checks and a documented readiness backlog. No live-store validation.
+
+- Verify unpublished Arabic lab preview and Arabic cart quantities; add three real-socket DOM recovery regression tests. Variant image switching and Shopify browser offline test remain incomplete.
