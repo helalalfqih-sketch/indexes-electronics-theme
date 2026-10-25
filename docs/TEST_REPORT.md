@@ -26,8 +26,7 @@
 No development store selected. No Shopify upload, editor session, real product or
 cart request, checkout, app-block integration, inventory error, locale publication,
 Chrome/Safari/Firefox storefront test, screen reader, visual regression, Lighthouse,
-LCP/CLS/INP, field data or merchant session was performed. CI result must be checked
-on the resulting Draft PR; a configured workflow is not a successful workflow.
+LCP/CLS/INP, field data or merchant session was performed. No runtime result is inferred from CI.
 
 ## Open blockers and known limits
 
@@ -42,3 +41,10 @@ on the resulting Draft PR; a configured workflow is not a successful workflow.
 - Inherited starter sections still need commercial refinement. Presence of files
   does not imply completion or editor compatibility.
 - No acceptance, sales, profit, production readiness or release date established.
+
+## GitHub CI evidence
+
+Implementation commit `d320d00536da05426099b5ceaf4b88fc1cfb9860`:
+- [PR validation run](https://github.com/helalalfqih-sketch/indexes-electronics-theme/actions/runs/40219375029): success; npm ci, 12 tests and Theme Check all passed. Push run 40219371674 also passed.
+- [Inherited CLA run](https://github.com/helalalfqih-sketch/indexes-electronics-theme/actions/runs/40219375194): failed with `Input required and not supplied: cla-token`.
+- The CLA workflow runs from main via pull_request_target. Its removal is proposed in this draft, but main remains untouched. Do not invent a token or claim all checks are green. This is an inherited repository workflow issue, separate from theme validation.
