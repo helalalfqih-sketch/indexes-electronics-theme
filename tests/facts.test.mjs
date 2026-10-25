@@ -1,0 +1,15 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { Liquid } from 'liquidjs';
+const engine = new Liquid({ strictFilters: true });
+engine.registerFilter('t', key => key);
+const source = readFileSync('snippets/product-facts.liquid','utf8').replace(/{% doc %}[\s\S]*?{% enddoc %}/g,'');
+const render = electronics => engine.parseAndRender(source, {product:{metafields:{electronics}}});
+const spec = (label, value, unit) => ({label:{value:label},value:{value},unit:{value:unit}});
+test('missing merchant facts produce no UI or compatibility claim', async()=>assert.equal((await render({})).trim(),''));
+test('incomplete specification rows and empty lists do not create empty headings',async()=>assert.equal((await render({specifications:{value:[spec('', '1'),spec('Port','')]},compatible_devices:{value:['']},box_contents:{value:[]}})).trim(),''));
+test('renders supplied Arabic, model names and units with bidirectional isolation', async()=>{const html=await render({specifications:{value:[spec('القدرة','65','W')]},compatible_devices:{value:['Device X 2026']}});assert.match(html,/<bdi>القدرة<\/bdi>/);assert.match(html,/<bdi>65<\/bdi>/);assert.match(html,/<bdi>W<\/bdi>/);assert.match(html,/<bdi>Device X 2026<\/bdi>/);assert.doesNotMatch(html,/box_contents/);});
+test('merchant plain text is escaped in all fact fields', async()=>{const attack='<img src=x onerror=alert(1)>';const html=await render({specifications:{value:[spec(attack,attack,attack)]},compatible_devices:{value:[attack]},box_contents:{value:[attack]}});assert.doesNotMatch(html,/<img/);assert.equal(html.match(/&lt;img/g).length,5);});
+test('zero-valued specification is not discarded', async()=>assert.match(await render({specifications:{value:[spec('Latency',0,'ms')]}}),/<bdi>0<\/bdi>/));
+test('box contents are independent of specifications and compatibility',async()=>{const html=await render({box_contents:{value:['Cable']}});assert.match(html,/Cable/);assert.doesNotMatch(html,/electronics.compatibility|electronics.specifications/);});

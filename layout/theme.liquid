@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="{{ request.locale.iso_code }}">
+{% assign language_code = request.locale.iso_code | split: '-' | first %}
+<html lang="{{ request.locale.iso_code }}" dir="{% if language_code == 'ar' or language_code == 'he' or language_code == 'fa' or language_code == 'ur' %}rtl{% else %}ltr{% endif %}">
   <head>
     {% # Inlined CSS Variables %}
     {% render 'css-variables' %}
@@ -19,7 +20,6 @@
 
     {% # Load and preload the critical CSS %}
     {{ 'critical.css' | asset_url | stylesheet_tag: preload: true }}
-    {{ 'base.css' | asset_url | stylesheet_tag }}
 
     {% # Social, title, etc. %}
     {% render 'meta-tags' %}
@@ -28,16 +28,11 @@
   </head>
 
   <body>
-    {% block 'container', tag: 'div' %}
-      {% block 'header' -%}{%- endblock %}
-    {% endblock %}
+    <a class="skip-link" href="#MainContent">{{ 'electronics.skip_content' | t }}</a>
+    {% sections 'header-group' %}
 
-    <main>
-      {{ content_for_layout }}
-    </main>
+    <main id="MainContent" tabindex="-1">{{ content_for_layout }}</main>
 
-    {% block 'container', tag: 'div' %}
-      {% block 'footer' -%}{%- endblock %}
-    {% endblock %}
+    {% sections 'footer-group' %}
   </body>
 </html>

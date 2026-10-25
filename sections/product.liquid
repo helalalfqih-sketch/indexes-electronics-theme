@@ -1,0 +1,88 @@
+{{ 'product.css' | asset_url | stylesheet_tag }}
+{% assign current_variant = product.selected_or_first_available_variant %}
+{% assign product_form_id = 'ProductForm-' | append: section.id %}
+{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+<div class="product-layout">
+  <div class="product-gallery">
+    {% if featured_image %}
+      {{ featured_image | image_url: width: 1400 | image_tag: widths: '360, 600, 900, 1400', sizes: '(min-width: 800px) 50vw, 100vw', loading: 'eager' }}
+    {% else %}
+      {{ 'product-1' | placeholder_svg_tag: 'product-placeholder' }}
+    {% endif %}
+    <div class="product-gallery__thumbnails">
+      {% for image in product.images %}
+        {% unless image == featured_image %}
+          {{ image | image_url: width: 500 | image_tag: widths: '180, 300, 500', sizes: '30vw', loading: 'lazy' }}
+        {% endunless %}
+      {% endfor %}
+    </div>
+  </div>
+  <div class="product-details">
+    {% for block in section.blocks %}
+      <div {{ block.shopify_attributes }}>
+        {% case block.type %}
+          {% when '@app' %}
+            {% render block %}
+          {% when 'title' %}
+            <h1>{{ product.title | escape }}</h1>
+          {% when 'price' %}
+            <p class="product-price"><bdi>{{ current_variant.price | money_with_currency }}</bdi></p>
+            {% if current_variant.compare_at_price > current_variant.price %}
+              <s><bdi>{{ current_variant.compare_at_price | money_with_currency }}</bdi></s>
+            {% endif %}
+            {% if current_variant.unit_price_measurement %}
+              <p><bdi>{{ current_variant.unit_price | money }} / {% if current_variant.unit_price_measurement.reference_value != 1 %}{{ current_variant.unit_price_measurement.reference_value }}{% endif %}{{ current_variant.unit_price_measurement.reference_unit | escape }}</bdi></p>
+            {% endif %}
+          {% when 'buy_buttons' %}
+            {% unless product.has_only_default_variant %}
+              <form action="{{ product.url }}" method="get" class="variant-form">
+                <label for="Variant-{{ section.id }}">{{ 'electronics.variant' | t }}</label>
+                <select id="Variant-{{ section.id }}" name="variant">
+                  {% for variant in product.variants %}
+                    <option value="{{ variant.id }}" {% if variant.id == current_variant.id %}selected{% endif %}>
+                      {{ variant.title | escape }} — {{ variant.price | money_with_currency }}{% unless variant.available %} — {{ 'electronics.sold_out' | t }}{% endunless %}
+                    </option>
+                  {% endfor %}
+                </select>
+                <button type="submit">{{ 'electronics.select_variant' | t }}</button>
+              </form>
+            {% endunless %}
+            {% form 'product', product, id: product_form_id %}
+              {{ form.errors | default_errors }}
+              <input type="hidden" name="id" value="{{ current_variant.id }}">
+              <label for="Quantity-{{ section.id }}">{{ 'electronics.quantity' | t }}</label>
+              <input id="Quantity-{{ section.id }}" type="number" name="quantity" min="{{ current_variant.quantity_rule.min | default: 1 }}" step="{{ current_variant.quantity_rule.increment | default: 1 }}" {% if current_variant.quantity_rule.max %}max="{{ current_variant.quantity_rule.max }}"{% endif %} value="{{ current_variant.quantity_rule.min | default: 1 }}">
+              <button class="button-primary" type="submit" {% unless current_variant.available %}disabled{% endunless %}>
+                {% if current_variant.available %}{{ 'electronics.add_to_cart' | t }}{% else %}{{ 'electronics.sold_out' | t }}{% endif %}
+              </button>
+              {{ form | payment_terms }}
+              {% if current_variant.available and section.settings.show_dynamic_checkout %}{{ form | payment_button }}{% endif %}
+            {% endform %}
+          {% when 'facts' %}
+            {% render 'product-facts', product: product %}
+          {% when 'description' %}
+            <div class="rte">{{ product.description }}</div>
+          {% when 'custom_liquid' %}
+            {{ block.settings.custom_liquid }}
+        {% endcase %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+<script type="application/ld+json">{{ product | structured_data }}</script>
+{% schema %}
+{
+  "name": "t:general.product",
+  "settings": [{"type":"checkbox","id":"show_dynamic_checkout","label":"t:labels.show_dynamic_checkout","default":true}],
+  "blocks": [
+    {"type":"@app"},
+    {"type":"title","name":"t:general.product_title","limit":1},
+    {"type":"price","name":"t:general.price","limit":1},
+    {"type":"buy_buttons","name":"t:general.buy_buttons","limit":1},
+    {"type":"facts","name":"t:general.product_facts","limit":1},
+    {"type":"description","name":"t:general.description","limit":1},
+    {"type":"custom_liquid","name":"t:general.custom_liquid","settings":[{"type":"liquid","id":"custom_liquid","label":"t:general.custom_liquid"}]}
+  ],
+  "disabled_on":{"groups":["header","footer"]}
+}
+{% endschema %}
