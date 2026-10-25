@@ -1,3 +1,7 @@
+<script type="module" src="{{ 'cart.js' | asset_url }}"></script>
+<div data-cart-controller data-section-id="{{ section.id }}" data-change-url="{{ routes.cart_change_url }}.js" data-cart-url="{{ routes.cart_url }}" data-error="{{ 'cart.error' | t | escape }}" data-updated="{{ 'cart.updated' | t | escape }}" data-loading="{{ 'cart.loading' | t | escape }}">
+  <p data-cart-status role="status" tabindex="-1"></p>
+  <a data-cart-reload href="{{ routes.cart_url }}" hidden>{{ 'cart.reload' | t }}</a>
 <h1>{{ 'cart.title' | t }}</h1>
 {% if cart.empty? %}
   <p>{{ 'electronics.cart_empty' | t }}</p>
@@ -12,8 +16,8 @@
           {% unless item.product.has_only_default_variant %}<p>{{ item.variant.title | escape }}</p>{% endunless %}
           <p><bdi>{{ item.final_line_price | money_with_currency }}</bdi></p>
           <label for="CartQuantity-{{ section.id }}-{{ forloop.index }}">{{ 'electronics.quantity' | t }}</label>
-          <input id="CartQuantity-{{ section.id }}-{{ forloop.index }}" type="number" name="updates[]" min="0" value="{{ item.quantity }}">
-          <a href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }} <span class="visually-hidden">{{ item.product.title | escape }}</span></a>
+          <input id="CartQuantity-{{ section.id }}-{{ forloop.index }}" type="number" name="updates[]" data-line-key="{{ item.key | escape }}" data-original-quantity="{{ item.quantity }}" required step="1" min="0" value="{{ item.quantity }}">
+          <a data-cart-remove href="{{ item.url_to_remove }}">{{ 'cart.remove' | t }} <span class="visually-hidden">{{ item.product.title | escape }}</span></a>
         </div>
       </div>
     {% endfor %}
@@ -23,6 +27,7 @@
     {% if additional_checkout_buttons %}{{ content_for_additional_checkout_buttons }}{% endif %}
   </form>
 {% endif %}
+</div>
 {% stylesheet %}
 .cart-form { padding-block:2rem; display:grid; gap:1rem; }
 .cart-line { display:grid; grid-template-columns:minmax(0,140px) minmax(0,1fr); gap:1rem; padding-block:1rem; border-block-end:1px solid currentColor; }

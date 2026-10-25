@@ -17,7 +17,11 @@
     "checkout": "Checkout",
     "title": "Cart",
     "update": "Update",
-    "remove": "Remove"
+    "remove": "Remove",
+    "error": "Could not confirm your cart update. Reload the cart before trying again.",
+    "updated": "Cart updated.",
+    "loading": "Updating cart…",
+    "reload": "Reload cart"
   },
   "customers": {
     "login": {
