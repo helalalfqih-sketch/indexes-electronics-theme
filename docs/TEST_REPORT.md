@@ -53,7 +53,7 @@ https://admin.shopify.com/store/indexes-electronics-theme-lab/themes/18990297929
 
 ## Arabic preparation and approvals
 
-Settings > Languages lists English only. Opened Add language; Arabic is offered, and dialog says Shopify Translate & Adapt will be installed. Canceled without saving. Adding/publishing a language is store-level, not restricted to this draft. Current official guide distinguishes Add and Publish:
+Settings > Languages lists English only. Opened Add language; Arabic is offered, and dialog says Shopify Translate & Adapt will be installed. Initially canceled without saving. Later selected Arabic and the lab domain in the review dialog; stopped before Done. [Pending review screenshot](evidence/arabic-language-review.jpg). No language added or published. Adding/publishing a language is store-level, not restricted to this draft. Current official guide distinguishes Add and Publish:
 https://help.shopify.com/en/manual/international/languages/manage-languages (reviewed 2026-10-25).
 
 Next specific approval: add Arabic as an **unpublished** language in this lab only (and the displayed Translate & Adapt installation if required), inspect the official unpublished-language preview, and only if necessary seek separate approval to publish Arabic. No default-language switch. No current claim that publication is technically required.
